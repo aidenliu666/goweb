@@ -1,7 +1,17 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"net/http"
+	"test/framework"
+)
 
 func main() {
-	fmt.Prin  tln("abcdefd")
+
+	server := http.Server{
+		Handler: framework.NewCore(),
+		Addr:    ":8080",
+	}
+	server.ListenAndServe()
+	fmt.Println("abcdefd")
 }
