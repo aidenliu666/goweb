@@ -22,11 +22,17 @@ func (c *Core) ServeHTTP(response http.ResponseWriter, request *http.Request) {
 	ctx := NewContext(request, response)
 
 	// 一个简单的路由选择器，这里直接写死为测试路由foo
-	router := c.router["foo"]
-	if router == nil {
-		return
+	for _, v := range c.router {
+		if v == nil {
+			break
+		}
+		v(ctx)
 	}
+	//router := c.router["foo"]
+	//if router == nil {
+	//	return
+	//}
 	log.Println("core.router")
 
-	router(ctx)
+	//router(ctx)
 }

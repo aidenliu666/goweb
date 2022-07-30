@@ -24,7 +24,7 @@ func FooControllerHandler(c *framework.Context) error {
 		}()
 		// Do real action
 		fmt.Println("aaaaaa")
-		time.Sleep(10 * time.Second)
+		time.Sleep(2 * time.Second)
 		fmt.Println("aaaaaa")
 		c.Json(200, "ok")
 
