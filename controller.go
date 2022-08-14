@@ -48,12 +48,6 @@ func FooControllerHandler(c *framework.Context) error {
 	return nil
 }
 
-func UserLoginController(c *framework.Context) error {
-	// 打印控制器名字
-	c.Json(200, "ok, UserLoginController")
-	return nil
-}
-
 func SubjectListController(c *framework.Context) error {
 	finish := make(chan struct{}, 1)
 	panicChan := make(chan interface{}, 1)

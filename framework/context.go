@@ -16,10 +16,10 @@ type Context struct {
 	request        *http.Request
 	responseWriter http.ResponseWriter
 	ctx            context.Context
-	handler        ControllerHandler
-
-	hasTimeout bool
-	writeMux   *sync.Mutex
+	handlers       []ControllerHandler
+	index          int //记录当前请求调用到调用链的哪个节点
+	hasTimeout     bool
+	writeMux       *sync.Mutex
 }
 
 func NewContext(r *http.Request, w http.ResponseWriter) *Context {
@@ -28,8 +28,24 @@ func NewContext(r *http.Request, w http.ResponseWriter) *Context {
 		responseWriter: w,
 		ctx:            r.Context(),
 		writeMux:       &sync.Mutex{},
+		index:          -1,
 	}
 
+}
+
+// Next https://static001.geekbang.org/resource/image/73/3c/73a80752cf6d94b90febd2e23e80bc3c.jpg?wh=1920x915
+// Next 函数是整个链路执行的重点，要好好理解，它通过维护 Context 中的一个下标，来控制链路移动，这个下标表示当前调用 Next 要执行的控制器序列。
+func (ctx *Context) Next() error {
+	ctx.index++
+	if ctx.index < len(ctx.handlers) {
+		if err := ctx.handlers[ctx.index](ctx); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+func (ctx *Context) SetHandlers(handlers []ControllerHandler) {
+	ctx.handlers = handlers
 }
 
 func (ctx *Context) WriterMux() *sync.Mutex {
