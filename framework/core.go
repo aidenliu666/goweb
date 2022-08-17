@@ -55,15 +55,17 @@ func (c *Core) ServeHTTP(response http.ResponseWriter, request *http.Request) {
 	log.Println("core.serveHTTP")
 	ctx := NewContext(request, response)
 
-	handlers := c.FindRouterByRequest(request)
-	if handlers == nil {
-		ctx.Json(404, "not found")
+	node := c.FindRouteNodeByRequest(request)
+	if node == nil {
+		ctx.SetStatus(404).Json("not found")
 		return
 	}
 	// 设置context中的handlers字段
-	ctx.SetHandlers(handlers)
+	ctx.SetHandlers(node.handlers)
+	params := node.parseParamsFromEndNode(request.URL.Path)
+	ctx.SetParams(params)
 	if err := ctx.Next(); err != nil {
-		ctx.Json(500, "inner error")
+		ctx.SetStatus(500).Json("inner error")
 		return
 	}
 
@@ -83,13 +85,12 @@ func (c *Core) ServeHTTP(response http.ResponseWriter, request *http.Request) {
 	//router(ctx)
 }
 
-func (c *Core) FindRouterByRequest(request *http.Request) []ControllerHandler {
+func (c *Core) FindRouteNodeByRequest(request *http.Request) *node {
 	uri := request.URL.Path
 	method := request.Method
-	upperUri := strings.ToUpper(uri)
 	upperMethod := strings.ToUpper(method)
 	if methodHandlerTree, ok := c.router[upperMethod]; ok {
-		return methodHandlerTree.FindHandler(upperUri)
+		return methodHandlerTree.root.matchNode(uri)
 	}
 	return nil
 }
