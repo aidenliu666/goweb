@@ -83,7 +83,7 @@ func (n *node) matchNode(uri string) *node {
 	return nil
 }
 
-// 将 uri 解析为 params
+// 最朴素的想法就是：查找出这个匹配路径，然后查找出其中的通配符节点，再和请求 URI 对应，获取这些通配符参数
 func (n *node) parseParamsFromEndNode(uri string) map[string]string {
 	ret := map[string]string{}
 	segments := strings.Split(uri, "/")
