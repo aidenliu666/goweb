@@ -1,39 +1,32 @@
 package main
 
 import (
-	"goweb/framework"
-	"strconv"
+	"fmt"
+	"github.com/gohade/hade/framework/gin"
 )
 
-func SubjectAddController(c *framework.Context) error {
-	c.SetStatus(200).Json("ok, SubjectDelController")
-	return nil
+func SubjectAddController(c *gin.Context) {
+	c.ISetOkStatus().IJson("ok, SubjectAddController")
 }
 
-func SubjectDelController(c *framework.Context) error {
-	var a string
-	if idurl, ok := c.ParamInt("id", 200); ok {
-		a = strconv.Itoa(idurl)
-	}
-	c.SetStatus(200).Json(a)
-	return nil
+func SubjectListController(c *gin.Context) {
+	c.ISetOkStatus().IJson("ok, SubjectListController")
 }
 
-func SubjectUpdateController(c *framework.Context) error {
-	c.SetStatus(200).Json("ok, SubjectDelController")
-	return nil
+func SubjectDelController(c *gin.Context) {
+	c.ISetOkStatus().IJson("ok, SubjectDelController")
 }
 
-func SubjectGetController(c *framework.Context) error {
-	var a string
-	if idurl, ok := c.ParamInt("id", 200); ok {
-		a = strconv.Itoa(idurl)
-	}
-	c.SetStatus(200).Json(a)
-	return nil
+func SubjectUpdateController(c *gin.Context) {
+	c.ISetOkStatus().IJson("ok, SubjectUpdateController")
 }
 
-func SubjectNameController(c *framework.Context) error {
-	c.SetStatus(200).Json("ok, SubjectDelController")
-	return nil
+func SubjectGetController(c *gin.Context) {
+	subjectId, _ := c.DefaultParamInt("id", 0)
+	c.ISetOkStatus().IJson("ok, SubjectGetController:" + fmt.Sprint(subjectId))
+
+}
+
+func SubjectNameController(c *gin.Context) {
+	c.ISetOkStatus().IJson("ok, SubjectNameController")
 }
